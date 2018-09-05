@@ -1,0 +1,1 @@
+This is a short string that should be written to the file.

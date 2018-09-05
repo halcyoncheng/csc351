@@ -1,0 +1,3 @@
+Copy the default VSCode tasks/launch JSON configuration files (done here)
+Copy the default clang-format configuration file (done here)
+Use "git init", remove this file
