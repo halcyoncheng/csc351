@@ -1,0 +1,34 @@
+\documentclass[12pt]{article}
+\newcommand{\answer}{\textbf{[Ans]}~}
+\newcommand{\points}[1]{\textbf{[#1pts]}}
+\oddsidemargin 0.25in
+\evensidemargin 0.25in
+\textwidth 6.0in
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[fleqn]{amsmath}
+\usepackage{amsthm}
+\title{Quiz 2}
+\author{Alex Cheng, Yilin Wang}
+\date{September 8th, 2018}
+\begin{document}
+\maketitle
+\section{Chapter 2, Exercise 12}
+A system call is calling an operating system service running in privileged mode. A procedure call is calling a block of code memory in user space. A system call should be significantly more expensive than a procedure call for the reasons below:
+\begin{itemize}
+\item A system call will make switch from user-mode to privileged kernel mode.
+\item A system call will trigger a trap that points to a specific interrupt.
+\item A system call will have to save the current state of the user process and then restore to it later.
+\item A procedure call shifts to a new window so the compiler do not need to save and restore registers.
+\end{itemize}
+
+\section{Chapter 3, Exercise 8}
+Since the recursive function will loop five times, therefore there will be a total of $2^5=32$ processes. So there will be 31 processes that are created if the program is run.
+\section{Chapter 3, Exercise 9}
+Based on the code snippet, two processes will be created. Therefore, there will be a total of three copies of the variable x.
+\section{Chapter 3, Exercise 10}
+\subsection{program 1}
+This program will produce a child process and wait for it to terminate. The child process will increment the variable val and print it on the screen as 6. Then the child return the value and exit. However, the parent process will not succeed the variable val from the child the process. So it will increment the variable val from 5 to 6 and then print it to the screen. Lastly the parent process returns the variable val.
+\subsection{program 2}
+This program will produce a child process and wait for it to terminate. However, the child process exits immediately. So the parent process increment the variable from 5 to 6 and print it to the screen. In the end it returns the variable val.
+\end{document}

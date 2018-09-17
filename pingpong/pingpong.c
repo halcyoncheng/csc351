@@ -18,8 +18,7 @@ int main(int argc, char **argv) {
 
 	// CREATE THE FILE
 
-	// TODO: OPEN, creating the file it it does not exit
-	if((fd = open(FILENAME, O_WRONLY | O_CREAT, 0644)) == -1){
+	if((fd = open(FILENAME, O_WRONLY | O_CREAT, 0644)) == -1) {
 		perror("open");
 		return EXIT_FAILURE;
 	}
@@ -34,11 +33,14 @@ int main(int argc, char **argv) {
 		offset += nwrite;
 	}
 
-	 
+	close(fd);
 
 	// READ THE CONTENTS BACK
 
-	// TODO: OPEN, assuming the file exists
+	if((fd = open(FILENAME, O_RDONLY)) == -1) {
+		perror("open");
+		return EXIT_FAILURE;
+	}
 
 	while((nread = read(fd, buffer, BUFFER_SIZE)) > 0) {
 		offset = 0;

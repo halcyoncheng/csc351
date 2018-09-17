@@ -8,23 +8,22 @@
 int main(int argc, char **argv) {
 	int variable = 10;
 	int childID;
+
 	int pipefds[2];
 
-	// Use pipe(2) here
-
-	// At this point, pipefds[0] is for reading, pipefds[1] is for writing
-	if(pipe(pipefds) != 0){
+	if(pipe(pipefds) != 0) {
 		perror("pipe");
+
 		return EXIT_FAILURE;
 	}
+
+	// At this point, pipefds[0] is for reading, pipefds[1] is for writing
 
 	childID = fork();
 
 	if(childID == 0) {
 		// Child: close the writing end
-		// TODO
 		close(pipefds[1]);
-
 
 		char buffer[BUFFER_SIZE];
 
@@ -39,10 +38,9 @@ int main(int argc, char **argv) {
 
 		return EXIT_SUCCESS;
 	}
-	close(pipefds[0]);
 
 	// Parent: close the reading end
-	// TODO here
+	close(pipefds[0]);
 
 	sleep(2);
 
@@ -51,13 +49,13 @@ int main(int argc, char **argv) {
 	char *message = "Please be home by 10pm and keep your cell phone on\n";
 
 	// Has to copy strlen(message) + 1 bytes to include the null character in the end!!!
-	// write(...)
 	write(pipefds[1], message, strlen(message) + 1);
 
-	// collect child status
 	int returnStatus;
 
 	wait(&returnStatus);
+
+	printf("Child exited with %d status\n", WEXITSTATUS(returnStatus));
 
 	return EXIT_SUCCESS;
 }

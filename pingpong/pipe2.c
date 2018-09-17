@@ -23,7 +23,10 @@ int main(int argc, char **argv) {
 	childID = fork();
 
 	if(childID == 0) {
-		// TODO: Child: Make the standard output be the writing end
+		// Child: Make the standard output be the writing end
+		// close(STDOUT_FILENO); // Done automatically by the dup2, below
+		close(pipefds[0]);
+		dup2(pipefds[1], STDOUT_FILENO);
 
 		if(execlp("ls", "ls", "-l", (char *) NULL) == -1) {
 			perror("execlp");
@@ -36,7 +39,10 @@ int main(int argc, char **argv) {
 	childID = fork();
 
 	if(childID == 0) {
-		// TODO: Child: Make the standard input be the reading end
+		// Child: Make the standard input be the reading end
+		close(STDIN_FILENO);
+		close(pipefds[1]);
+		dup2(pipefds[0], STDIN_FILENO);
 
 		if(execlp("grep", "grep", "pip", (char *) NULL) == -1) {
 			perror("Error creating child process");
