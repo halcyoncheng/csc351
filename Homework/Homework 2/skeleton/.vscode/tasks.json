@@ -6,7 +6,7 @@
         {
             "label": "Producer/Consumer version 1 (pre condition variables)",
             "type": "shell",
-            "command": "clang -std=c11 -g -o pc1 -I. producer-consumer1.c",
+            "command": "make pc1-clean",
             "group": {
                 "kind": "build",
                 "isDefault": true

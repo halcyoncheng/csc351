@@ -1,0 +1,58 @@
+\documentclass[10pt]{article}
+\author{Alex Cheng, Alto Tutar}
+\title{Quiz 3}
+\date{\today}
+\begin{document}
+\maketitle
+\section{Question 1}
+The hardware has to save the state of the current stack pointer, program counter, and processor status before jumping to the interrupt stack for interrupt handler. Once jumped to the interrupt stack and started running the interrupt handler, the hardware will then store these values of the interrupt handler.
+\section{Question 2}
+OS needs to maintain its reliability. Even if the user-level program has a bug and the user-level stack pointer might not have a valid memory address, the kernel-level stack would allow the kernel handler to work consistently. OS also needs to maintain security. If the kernel-handler stores its variables on a user-level stack, other threads running on a multiprocessor computer might change these variables during a system call, corrupting the kernel-handler. 
+\section{Question 3}
+A thread can pass a pointer to one of its local variables to another thread. Note that t1 stores its local variables on its stack, and in case t1 returns from the procedure, now the stack might be used for another purpose, and thus t2 has a pointer to an address that doesn’t hold the value of v but something else.
+\section{Question 4}
+FIFO:\\
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Task & Length & Arrival Time & Completion Time & Response Time\\
+\hline
+0 & 85 & 0 & 85 & 85\\
+2 & 30 & 10 & 115 & 105\\
+2 & 35 & 15 & 150 & 135\\
+3 & 20 & 80 & 170 & 90\\
+4 & 50 & 85 & 220 & 135\\
+\hline
+Avg: & & & 148 & 110\\
+\hline
+\end{tabular}\\
+\\SJF:\\
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Task & Length & Arrival Time & Completion Time & Response Time\\
+\hline
+0 & 85 & 0 & 220 & 220\\
+2 & 30 & 10 & 40 & 30\\
+2 & 35 & 15 & 75 & 60\\
+3 & 20 & 80 & 105 & 25\\
+4 & 50 & 85 & 155 & 70\\
+\hline
+Avg: & & & 119 & 81\\
+\hline
+\end{tabular}\\
+\\Round-Robin:\\
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Task & Length & Arrival Time & Completion Time & Response Time\\
+\hline
+0 & 85 & 0 & 220 & 220\\
+2 & 30 & 10 & 80 & 70\\
+2 & 35 & 15 & 135 & 120\\
+3 & 20 & 80 & 145 & 65\\
+4 & 50 & 85 & 215 & 130\\
+\hline
+Avg: & & & 159 & 121\\
+\hline
+\end{tabular}
+\section{Question 5}
+A small quantum will allow short tasks to complete faster. However, if all tasks has the same length and are relatively long, there will be two weakness of Round-Robin: 1. Switching context become expensive, since every task only gets a little done at one time, there will be a lot of context switching. 2. The response time is very bad in this situation, since all tasks have the same length, they will all finish around the last moment, while none gets done before all of them are nearly finished.
+\end{document}

@@ -1,28 +1,68 @@
+/**
+ * threads.c
+ * Author: Alex Cheng, Jenny Zhong
+ */
 #include "threads.h"
 #include<stdio.h>
 #include<stdlib.h>
 #include<signal.h>
 #include<string.h>
+#include<sys/time.h>
 
 #define STACK_SIZE 65536
 
 tcb_t thread_context[MAX_THREADS];
 tcb_t *current_thread_context;
-stack_t new_stack;
+char stacks[MAX_THREADS * STACK_SIZE];
+struct itimerval interval;
+struct itimerval stop;
 int created = 0;
 int current_thread;
 int count = 0;
+int option = 0;
 
 void sigusr_handler(int signal_number) {
 	if(setjmp(thread_context[current_thread].buffer) == 0) {
 		created = 1;
 	}
 	else {
+        if(option == 1){
+            setitimer(ITIMER_REAL, &interval, NULL);
+        }
 		thread_context[current_thread].function(thread_context[current_thread].argument);
 	}
 }
 
-void thread_init(int preemption_enabled){ 
+void sigalrm_handler(int signum){
+    thread_yield();
+}
+
+void setupSignalHandler(int signal, void (*handler)(int)) {
+	struct sigaction options;
+	memset(&options, 0, sizeof(struct sigaction));
+	options.sa_handler = handler;
+	if(sigaction(signal, &options, NULL) == -1) {
+		perror("sigaction");
+	exit(EXIT_FAILURE);
+	}
+}
+
+void thread_init(int preemption_enabled){
+    option = preemption_enabled;
+    if(preemption_enabled){
+        interval.it_interval.tv_sec = 0;
+        interval.it_interval.tv_usec = 100000;
+        interval.it_value.tv_sec = 0;
+        interval.it_value.tv_usec = 100000;
+        stop.it_interval.tv_sec = 0;
+        stop.it_interval.tv_usec = 0;
+        stop.it_value.tv_sec = 0;
+        stop.it_value.tv_usec = 0;
+        setupSignalHandler(SIGALRM, sigalrm_handler);
+        setitimer(ITIMER_REAL, &interval, NULL);
+    }
+    
+
     for(int i = 0; i < MAX_THREADS; i++){
         thread_context[i].state = STATE_INVALID;
     }
@@ -49,7 +89,7 @@ void thread_init(int preemption_enabled){
 
 int thread_create(void *(*function)(void *), void *argument){
     int i = 0;
-    char stack[STACK_SIZE];
+    stack_t new_stack;
     while(thread_context[i].state != STATE_INVALID && i < MAX_THREADS){
         i++;
         if(i == MAX_THREADS){
@@ -60,7 +100,7 @@ int thread_create(void *(*function)(void *), void *argument){
     thread_context[i].state = STATE_ACTIVE;
     thread_context[i].function = function;
     thread_context[i].argument = argument;
-    thread_context[i].stack = stack;
+    thread_context[i].stack = &stacks[(i - 1) * STACK_SIZE];
     thread_context[i].number = i;
     new_stack.ss_flags = 0;
 	new_stack.ss_size = STACK_SIZE;
@@ -73,12 +113,15 @@ int thread_create(void *(*function)(void *), void *argument){
     raise(SIGUSR1);
     while(!created){};
     created = 0;
+    current_thread = (*current_thread_context).number;
     return i;
 }
 
 int thread_yield(void){
+    if(option == 1){
+    setitimer(ITIMER_REAL, &stop, NULL);
+    }
     int i = 0;
-    // count++;
     while(thread_context[i].state != STATE_ACTIVE || current_thread_context == &thread_context[i]){
         i++;
         
@@ -86,18 +129,17 @@ int thread_yield(void){
             return 0;
         }
     }
-    // printf("next:%d\n", i);
-    // printf("current:%d\n", current_thread);
+    
     if(setjmp(thread_context[current_thread].buffer) == 0){
-        
         current_thread_context = &thread_context[i];
         current_thread = i;
         longjmp(thread_context[i].buffer, 1);
     }
     else{
-        
-        // printf("count:%d\n", count);
-        thread_context[current_thread].function(thread_context[current_thread].argument);
+        if(option == 1){
+        setitimer(ITIMER_REAL, &interval, NULL);
+        }
+        return EXIT_SUCCESS;
     }
     return EXIT_FAILURE;
 }
@@ -118,15 +160,14 @@ void thread_exit(void *return_value){
 }
 
 void thread_join(int target_thread_number){
-    // printf("%d\n", (*current_thread_context).number);
     (*current_thread_context).state = STATE_BLOCKED;
-    (*current_thread_context).joiner_thread_number = current_thread;
+    thread_context[target_thread_number].joiner_thread_number = current_thread;
     if(setjmp(thread_context[current_thread].buffer) == 0){
         current_thread_context = &thread_context[target_thread_number];
         current_thread = target_thread_number;
         longjmp(thread_context[target_thread_number].buffer, 1);
     }
     else{
-        thread_context[current_thread].function(thread_context[current_thread].argument);
+        printf("Waited thread has finished.\n");
     }
 }

@@ -21,7 +21,7 @@ void *producer(void * data) {
 		thread_cond_signal(&queue_not_empty);
 		thread_mutex_unlock(&queue_lock);
 
-		//thread_yield();
+		// thread_yield();
 		usleep(100);
 	}
 
@@ -54,7 +54,7 @@ int main(void) {
 	int consumerID;
 
 	// Initialize the threading package
-	thread_init(0);
+	thread_init(1);
 
 	// Initialize the mutex
 	thread_mutex_init(&queue_lock);

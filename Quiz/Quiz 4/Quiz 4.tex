@@ -1,0 +1,68 @@
+\documentclass[10pt]{article}
+\author{Alex Cheng, Jenny Zhong}
+\title{Quiz 4}
+\date{\today}
+\begin{document}
+\maketitle
+\begin{itemize}
+\item $\surd$ \ [1 pts] I read textbook Chap. 9.
+\item \ [4 pts] Chapter 9, exercise 4.\\
+a)\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+b)\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+c)\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\item \ [4 pts] Chapter 9, exercise 12.\\
+a)average time$=1ns*0.99+2ns*0.01*0.99+202ns*0.01*0.01*0.99998+(10^7ns+202ns)*0.01*0.01*0.00002=1.05ns$\\
+b)Choosing the first two gives average time$=1ns*0.99+2ns*0.01*0.99+202ns*0.01*0.01*0.99999+(7*10^6ns+202ns)*0.01*0.01*0.00001=1.037ns$\\
+Choosing the second and the third gives average time$=1ns*0.99+2ns*0.01*0.99+202ns*0.01*0.01*0.99999+(5*10^8ns+202ns)*0.01*0.01*0.000005+(10^7ns+202ns)*0.01*0.01*0.000005=1.285ns$\\
+Choosing the first and the third gives average time$=1ns*0.99+2ns*0.01*0.99+202ns*0.01*0.01*0.99998+(5*10^8ns+202ns)*0.01*0.01*0.00001+(7*10^6ns+202ns)*0.01*0.01*0.00001=1.537ns$\\
+Therefore, we should buy the first two options. 
+\item $\surd$ \ [1 pts] I read textbook Chap. 12.
+\item \ [3 pts] Chapter 12, exercise 5.\\
+For each request:\\
+seek time(average seek time): $12.0ms$\\
+rotation time: $5.56ms$\\
+transfer time: $0.00482ms$\\
+total time: $12.0ms+5.56ms+0.00482ms=17.56ms$\\
+So the total time for 10000 reads will be $175.6s$.
+\item \ [4 pts] Chapter 12, exercise 6.\\
+For 10000 requests:\\
+seek time(average time): $12.0ms$\\
+rotation time: $5.56ms-\frac{1}{32}*11.1ms=5.21ms$\\
+transfer time: $48.2ms$\\
+total time: $12.0ms+5.21ms+48.2ms=65.41ms$\\
+So the total time for 10000 reads will be $65.41ms$
+\item $\surd$ [1 pts] I read textbook Chap. 13, until (including) Sec. 13.3.2.
+\item $\surd$ [1 pts] I read textbook Chap. 14, until (including) Sec. 14.2.1.
+\item \ [3 pts] Chapter 13, exercise 11.\\
+The $min=2n+2$. We need only read inode and direct block for each level of directory starting from the root directory. And at last we read the inode of the file and a direct block to fetch the first block.
+The $max=5n+2$. In the worst case, we need to read inode, triple indirect block, double indirect block, indirect block, direct block for each level of directory starting from the root directory. And at last we read the inode of the file nad a direct block to fetch the first block.
+\end{itemize}
+\end{document}

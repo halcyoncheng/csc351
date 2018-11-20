@@ -47,6 +47,7 @@ void *consumer(void * data) {
 
 		// *Exchange* the comment on those lines when your preemption is working
 		//usleep(100);
+		
 		thread_yield();
 	}
 
